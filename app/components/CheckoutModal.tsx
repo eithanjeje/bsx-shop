@@ -14,24 +14,18 @@ interface CheckoutModalProps {
 
 export default function CheckoutModal({ product, onClose }: CheckoutModalProps) {
   const [loadingStripe, setLoadingStripe] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false); // Estado para mostrar la pantalla de éxito en el mismo modal
+  const [isSuccess, setIsSuccess] = useState(false); // Controla si se muestra el menú de éxito
   const [orderId, setOrderId] = useState("");
 
-  // Simulación o llamada para Stripe integrada en el modal
-  const handleStripeCheckout = async () => {
-    try {
-      setLoadingStripe(true);
-      // Aquí simulamos el proceso de pago exitoso dentro de la misma tienda (ideal para modo prueba o webhook directo)
-      setTimeout(() => {
-        setOrderId("STRIPE-" + Math.floor(Math.random() * 1000000));
-        setLoadingStripe(false);
-        setIsSuccess(true); // Cambia el modal a la vista de éxito
-      }, 1500);
-    } catch (error) {
-      console.error(error);
-      alert("Error en el pago");
+  // Manejador para el pago con Stripe (simulado/integrado directo en el modal)
+  const handleStripeCheckout = () => {
+    setLoadingStripe(true);
+    setTimeout(() => {
+      const generatedId = "STRIPE-" + Math.floor(Math.random() * 900000 + 100000);
+      setOrderId(generatedId);
       setLoadingStripe(false);
-    }
+      setIsSuccess(true); // ¡Cambia el modal al menú de éxito!
+    }, 1200);
   };
 
   return (
@@ -46,8 +40,8 @@ export default function CheckoutModal({ product, onClose }: CheckoutModalProps) 
           ✕
         </button>
 
-        {/* SI EL PAGO NO SE HA COMPLETADO, MUESTRA EL FORMULARIO DE PAGO */}
         {!isSuccess ? (
+          /* PASO 1: FORMULARIO DE PAGO */
           <>
             <h2 className="text-xl font-black text-white mb-1">Finalizar Compra</h2>
             <p className="text-xs text-gray-400 mb-4">Selecciona tu método de pago preferido</p>
@@ -61,7 +55,7 @@ export default function CheckoutModal({ product, onClose }: CheckoutModalProps) 
               <div className="text-lg font-black text-red-500">MX${product.price.toFixed(2)}</div>
             </div>
 
-            {/* Botón de Tarjeta / Stripe */}
+            {/* Botón de Stripe */}
             <div className="mb-4">
               <button
                 onClick={handleStripeCheckout}
@@ -100,8 +94,9 @@ export default function CheckoutModal({ product, onClose }: CheckoutModalProps) 
                   onApprove={async (data, actions) => {
                     if (actions.order) {
                       await actions.order.capture();
-                      setOrderId(data.orderID || "PAYPAL-ORDER");
-                      setIsSuccess(true); // Cambia el modal directamente a la pantalla de Discord
+                      const paypalId = data.orderID || "PAYPAL-" + Math.floor(Math.random() * 900000);
+                      setOrderId(paypalId);
+                      setIsSuccess(true); // ¡Cambia el modal al menú de éxito de Discord al instante!
                     }
                   }}
                 />
@@ -109,8 +104,8 @@ export default function CheckoutModal({ product, onClose }: CheckoutModalProps) 
             </div>
           </>
         ) : (
-          /* SI EL PAGO SE COMPLETÓ, MUESTRA EL MENSAJE DE ÉXITO Y DISCORD DENTRO DEL MISMO MODAL */
-          <div className="text-center py-4">
+          /* PASO 2: MENÚ DE ÉXITO Y DISCORD DENTRO DEL MISMO MODAL */
+          <div className="text-center py-2">
             <div className="w-16 h-16 bg-red-600/20 border border-red-500 rounded-full flex items-center justify-center mx-auto mb-4 text-red-500 text-3xl shadow-[0_0_15px_rgba(239,68,68,0.5)]">
               ✓
             </div>
@@ -127,7 +122,7 @@ export default function CheckoutModal({ product, onClose }: CheckoutModalProps) 
 
             <div className="border-t border-red-500/20 pt-4 mb-5">
               <p className="text-xs text-gray-300 mb-4 leading-relaxed">
-                📸 <strong className="text-white">Siguiente paso obligatorio:</strong> Toma captura de pantalla a este comprobante y abre un ticket en nuestro servidor de Discord para reclamar tu producto automáticamente.
+                📸 <strong className="text-white">Siguiente paso obligatorio:</strong> Toma una captura de pantalla a este comprobante y abre un ticket en nuestro servidor de Discord para reclamar tu producto de forma automática.
               </p>
               <a
                 href="https://discord.gg/TU_LINK_DE_DISCORD" 
@@ -143,7 +138,7 @@ export default function CheckoutModal({ product, onClose }: CheckoutModalProps) 
               onClick={onClose}
               className="text-xs text-gray-400 hover:text-white underline cursor-pointer"
             >
-              Cerrar ventana
+              Cerrar menú
             </button>
           </div>
         )}
