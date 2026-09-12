@@ -125,7 +125,7 @@ export default function CheckoutModal({ product, onClose }: CheckoutModalProps) 
                 📸 <strong className="text-white">Siguiente paso obligatorio:</strong> Toma una captura de pantalla a este comprobante y abre un ticket en nuestro servidor de Discord para reclamar tu producto de forma automática.
               </p>
               <a
-                href="https://discord.gg/TU_LINK_DE_DISCORD" 
+                href="https://discord.gg/2F87YVpZD" 
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-block w-full bg-[#5865F2] hover:bg-[#4752C4] text-white text-xs font-bold py-3 rounded-xl transition-all shadow-[0_0_15px_rgba(88,101,242,0.4)]"
