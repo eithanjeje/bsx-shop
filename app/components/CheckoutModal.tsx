@@ -13,20 +13,8 @@ interface CheckoutModalProps {
 }
 
 export default function CheckoutModal({ product, onClose }: CheckoutModalProps) {
-  const [loadingStripe, setLoadingStripe] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [orderId, setOrderId] = useState("");
-
-  // Manejador para el pago con Stripe
-  const handleStripeCheckout = () => {
-    setLoadingStripe(true);
-    setTimeout(() => {
-      const generatedId = "STRIPE-" + Math.floor(Math.random() * 900000 + 100000);
-      setOrderId(generatedId);
-      setLoadingStripe(false);
-      setIsSuccess(true);
-    }, 1200);
-  };
 
   return (
     <div 
@@ -37,8 +25,8 @@ export default function CheckoutModal({ product, onClose }: CheckoutModalProps) 
         width: '100vw',
         height: '100vh',
         backgroundColor: 'rgba(0, 0, 0, 0.85)',
-        backdropFilter: 'blur(6px)',
-        zIndex: 99999,
+        backdropFilter: 'blur(8px)',
+        zIndex: 999999,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -47,13 +35,12 @@ export default function CheckoutModal({ product, onClose }: CheckoutModalProps) 
       }}
     >
       <div 
-        className="gamer-card border border-red-500/50 rounded-2xl p-6 bg-black max-w-md w-full relative shadow-[0_0_40px_rgba(239,68,68,0.5)] my-auto"
+        className="gamer-card border border-red-500/60 rounded-2xl p-6 bg-black max-w-md w-full relative shadow-[0_0_50px_rgba(239,68,68,0.6)] my-auto"
       >
-        
         {/* Botón de cerrar */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-white text-lg font-bold cursor-pointer z-20 bg-red-950/50 w-8 h-8 rounded-full flex items-center justify-center border border-red-500/30"
+          className="absolute top-4 right-4 text-gray-400 hover:text-white text-base font-bold cursor-pointer z-30 bg-red-950/60 w-8 h-8 rounded-full flex items-center justify-center border border-red-500/40 transition-all hover:bg-red-600"
         >
           ✕
         </button>
@@ -62,7 +49,7 @@ export default function CheckoutModal({ product, onClose }: CheckoutModalProps) 
           /* PASO 1: FORMULARIO DE PAGO */
           <>
             <h2 className="text-xl font-black text-white mb-1">Finalizar Compra</h2>
-            <p className="text-xs text-gray-400 mb-4">Selecciona tu método de pago preferido</p>
+            <p className="text-xs text-gray-400 mb-4">Selecciona tu método de pago</p>
 
             {/* Resumen del producto */}
             <div className="bg-red-950/30 border border-red-500/20 rounded-xl p-3 mb-6 flex justify-between items-center">
@@ -73,26 +60,14 @@ export default function CheckoutModal({ product, onClose }: CheckoutModalProps) 
               <div className="text-lg font-black text-red-500">MX${product.price.toFixed(2)}</div>
             </div>
 
-            {/* Botón de Stripe */}
-            <div className="mb-4">
-              <button
-                onClick={handleStripeCheckout}
-                disabled={loadingStripe}
-                className="w-full bg-red-600 hover:bg-red-500 text-white text-xs font-bold py-3 rounded-xl transition-all shadow-[0_0_15px_rgba(239,68,68,0.4)] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+            {/* Botones de PayPal con tu Client ID real */}
+            <div className="mt-2 z-0">
+              <PayPalScriptProvider 
+                options={{ 
+                  clientId: "BAAVWzBgpz3ZR-aEe0nPqCzSNjidhMXYP2k2VLApS9QBOxcTUStOccfuo8HzXzpwOEqY65MrySFFwM68yg", 
+                  currency: "MXN" 
+                }}
               >
-                {loadingStripe ? "Procesando pago..." : "💳 Pagar con Tarjeta (Stripe)"}
-              </button>
-            </div>
-
-            <div className="relative flex py-2 items-center">
-              <div className="flex-grow border-t border-red-500/20"></div>
-              <span className="flex-shrink mx-4 text-gray-500 text-[10px] uppercase tracking-wider">o también</span>
-              <div className="flex-grow border-t border-red-500/20"></div>
-            </div>
-
-            {/* Botones de PayPal */}
-            <div className="mt-4 z-0">
-              <PayPalScriptProvider options={{ clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "test", currency: "MXN" }}>
                 <PayPalButtons
                   style={{ layout: "vertical", color: "blue", shape: "rect", label: "pay" }}
                   createOrder={(data, actions) => {
@@ -122,7 +97,7 @@ export default function CheckoutModal({ product, onClose }: CheckoutModalProps) 
             </div>
           </>
         ) : (
-          /* PASO 2: MENÚ DE ÉXITO Y DISCORD DENTRO DEL MISMO MODAL */
+          /* PASO 2: MENÚ DE ÉXITO Y DISCORD */
           <div className="text-center py-2">
             <div className="w-16 h-16 bg-red-600/20 border border-red-500 rounded-full flex items-center justify-center mx-auto mb-4 text-red-500 text-3xl shadow-[0_0_15px_rgba(239,68,68,0.5)]">
               ✓
@@ -160,7 +135,6 @@ export default function CheckoutModal({ product, onClose }: CheckoutModalProps) 
             </button>
           </div>
         )}
-
       </div>
     </div>
   );
