@@ -48,7 +48,7 @@ export default function CheckoutModal({ product, onClose }: CheckoutModalProps) 
         {/* Botón de cerrar */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-white text-lg font-bold"
+          className="absolute top-4 right-4 text-gray-400 hover:text-white text-lg font-bold cursor-pointer"
         >
           ✕
         </button>
@@ -104,7 +104,7 @@ export default function CheckoutModal({ product, onClose }: CheckoutModalProps) 
               onApprove={async (data, actions) => {
                 if (actions.order) {
                   await actions.order.capture();
-                  // Redirige a la página de éxito de Discord al completar PayPal
+                  // Redirige a la página de éxito de Discord al completar PayPal con seguridad de ventana principal
                   window.location.href = `/success?token=${data.orderID}`;
                 }
               }}

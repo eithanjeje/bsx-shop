@@ -1,14 +1,16 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-  apiVersion: "2025-02-28.acacia" as any,
-});
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
 
 export async function POST(req: Request) {
   try {
     const { price, name } = await req.json();
-    const origin = req.headers.get("origin") || "http://localhost:3000";
+    
+    // Obtenemos el origen de forma segura (funciona tanto local como en Vercel)
+    const host = req.headers.get("host") || "localhost:3000";
+    const protocol = host.includes("localhost") ? "http" : "https";
+    const origin = `${protocol}://${host}`;
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
