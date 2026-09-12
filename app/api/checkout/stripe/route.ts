@@ -2,12 +2,13 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-  apiVersion: "2023-10-16" as any,
+  apiVersion: "2025-02-28.acacia" as any,
 });
 
 export async function POST(req: Request) {
   try {
-    const { productId, name, price } = await req.json();
+    const { price, name } = await req.json();
+    const origin = req.headers.get("origin") || "http://localhost:3000";
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -18,19 +19,19 @@ export async function POST(req: Request) {
             product_data: {
               name: name,
             },
-            unit_amount: Math.round(price * 100),
+            unit_amount: Math.round(price * 100), // Stripe usa centavos
           },
           quantity: 1,
         },
       ],
       mode: "payment",
-      success_url: `${req.headers.get("origin")}/?success=true`,
-      cancel_url: `${req.headers.get("origin")}/?canceled=true`,
+      success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${origin}/`,
     });
 
     return NextResponse.json({ url: session.url });
-  } catch (err: any) {
-    console.error("Error en Stripe Route:", err);
-    return NextResponse.json({ error: err.message }, { status: 500 });
+  } catch (error: any) {
+    console.error("Error en Stripe API:", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
