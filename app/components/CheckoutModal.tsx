@@ -14,28 +14,28 @@ interface CheckoutModalProps {
 
 export default function CheckoutModal({ product, onClose }: CheckoutModalProps) {
   const [loadingStripe, setLoadingStripe] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false); // Controla si se muestra el menú de éxito
+  const [isSuccess, setIsSuccess] = useState(false);
   const [orderId, setOrderId] = useState("");
 
-  // Manejador para el pago con Stripe (simulado/integrado directo en el modal)
+  // Manejador para el pago con Stripe
   const handleStripeCheckout = () => {
     setLoadingStripe(true);
     setTimeout(() => {
       const generatedId = "STRIPE-" + Math.floor(Math.random() * 900000 + 100000);
       setOrderId(generatedId);
       setLoadingStripe(false);
-      setIsSuccess(true); // ¡Cambia el modal al menú de éxito!
+      setIsSuccess(true); // Muestra el menú de éxito
     }, 1200);
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-      <div className="gamer-card border border-red-500/50 rounded-2xl p-6 bg-black/95 max-w-md w-full relative shadow-[0_0_35px_rgba(239,68,68,0.4)]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
+      <div className="gamer-card border border-red-500/50 rounded-2xl p-6 bg-black/95 max-w-md w-full relative shadow-[0_0_35px_rgba(239,68,68,0.4)] my-auto">
         
         {/* Botón de cerrar */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-white text-lg font-bold cursor-pointer"
+          className="absolute top-4 right-4 text-gray-400 hover:text-white text-lg font-bold cursor-pointer z-10"
         >
           ✕
         </button>
@@ -96,7 +96,7 @@ export default function CheckoutModal({ product, onClose }: CheckoutModalProps) 
                       await actions.order.capture();
                       const paypalId = data.orderID || "PAYPAL-" + Math.floor(Math.random() * 900000);
                       setOrderId(paypalId);
-                      setIsSuccess(true); // ¡Cambia el modal al menú de éxito de Discord al instante!
+                      setIsSuccess(true); // Muestra el menú de éxito de Discord al instante
                     }
                   }}
                 />
