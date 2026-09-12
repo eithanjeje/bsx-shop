@@ -51,21 +51,21 @@ export default function CheckoutModal({ product, onClose }: CheckoutModalProps) 
             <h2 className="text-xl font-black text-white mb-1">Finalizar Compra</h2>
             <p className="text-xs text-gray-400 mb-4">Selecciona tu método de pago</p>
 
-            {/* Resumen del producto */}
+            {/* Resumen del producto en USD */}
             <div className="bg-red-950/30 border border-red-500/20 rounded-xl p-3 mb-6 flex justify-between items-center">
               <div>
                 <div className="text-sm font-bold text-white">{product.name}</div>
                 <div className="text-[10px] text-gray-400">Entrega automática 24/7</div>
               </div>
-              <div className="text-lg font-black text-red-500">MX${product.price.toFixed(2)}</div>
+              <div className="text-lg font-black text-red-500">US${product.price.toFixed(2)}</div>
             </div>
 
-            {/* Botones de PayPal con tu Client ID real */}
+            {/* Botones de PayPal configurados en USD */}
             <div className="mt-2 z-0">
               <PayPalScriptProvider 
                 options={{ 
                   clientId: "BAAVWzBgpz3ZR-aEe0nPqCzSNjidhMXYP2k2VLApS9QBOxcTUStOccfuo8HzXzpwOEqY65MrySFFwM68yg", 
-                  currency: "MXN" 
+                  currency: "USD" 
                 }}
               >
                 <PayPalButtons
@@ -76,7 +76,7 @@ export default function CheckoutModal({ product, onClose }: CheckoutModalProps) 
                       purchase_units: [
                         {
                           amount: {
-                            currency_code: "MXN",
+                            currency_code: "USD",
                             value: product.price.toFixed(2),
                           },
                           description: product.name,
