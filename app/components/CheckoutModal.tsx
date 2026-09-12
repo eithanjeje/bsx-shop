@@ -24,18 +24,36 @@ export default function CheckoutModal({ product, onClose }: CheckoutModalProps) 
       const generatedId = "STRIPE-" + Math.floor(Math.random() * 900000 + 100000);
       setOrderId(generatedId);
       setLoadingStripe(false);
-      setIsSuccess(true); // Muestra el menú de éxito
+      setIsSuccess(true);
     }, 1200);
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
-      <div className="gamer-card border border-red-500/50 rounded-2xl p-6 bg-black/95 max-w-md w-full relative shadow-[0_0_35px_rgba(239,68,68,0.4)] my-auto">
+    <div 
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        backgroundColor: 'rgba(0, 0, 0, 0.85)',
+        backdropFilter: 'blur(6px)',
+        zIndex: 99999,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '16px',
+        overflowY: 'auto'
+      }}
+    >
+      <div 
+        className="gamer-card border border-red-500/50 rounded-2xl p-6 bg-black max-w-md w-full relative shadow-[0_0_40px_rgba(239,68,68,0.5)] my-auto"
+      >
         
         {/* Botón de cerrar */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-white text-lg font-bold cursor-pointer z-10"
+          className="absolute top-4 right-4 text-gray-400 hover:text-white text-lg font-bold cursor-pointer z-20 bg-red-950/50 w-8 h-8 rounded-full flex items-center justify-center border border-red-500/30"
         >
           ✕
         </button>
@@ -96,7 +114,7 @@ export default function CheckoutModal({ product, onClose }: CheckoutModalProps) 
                       await actions.order.capture();
                       const paypalId = data.orderID || "PAYPAL-" + Math.floor(Math.random() * 900000);
                       setOrderId(paypalId);
-                      setIsSuccess(true); // Muestra el menú de éxito de Discord al instante
+                      setIsSuccess(true);
                     }
                   }}
                 />
