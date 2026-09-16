@@ -2,19 +2,20 @@
 
 import { useState } from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import { CartItem } from "@/app/page";
 
 interface CheckoutModalProps {
-  product: {
-    id: string;
-    name: string;
-    price: number;
-  };
+  cart: CartItem[];
   onClose: () => void;
+  onClearCart: () => void;
 }
 
-export default function CheckoutModal({ product, onClose }: CheckoutModalProps) {
+export default function CheckoutModal({ cart, onClose, onClearCart }: CheckoutModalProps) {
   const [isSuccess, setIsSuccess] = useState(false);
   const [orderId, setOrderId] = useState("");
+
+  const totalPrice = cart.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2);
+  const itemDescription = "BSX Shop: " + cart.map(item => `${item.quantity}x ${item.name}`).join(", ");
 
   return (
     <div 
@@ -34,10 +35,7 @@ export default function CheckoutModal({ product, onClose }: CheckoutModalProps) 
         overflowY: 'auto'
       }}
     >
-      <div 
-        className="gamer-card border border-red-500/60 rounded-2xl p-6 bg-black max-w-md w-full relative shadow-[0_0_50px_rgba(239,68,68,0.6)] my-auto"
-      >
-        {/* Botón de cerrar */}
+      <div className="gamer-card border border-red-500/60 rounded-2xl p-6 bg-black max-w-md w-full relative shadow-[0_0_50px_rgba(239,68,68,0.6)] my-auto">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-white text-base font-bold cursor-pointer z-30 bg-red-950/60 w-8 h-8 rounded-full flex items-center justify-center border border-red-500/40 transition-all hover:bg-red-600"
@@ -46,21 +44,26 @@ export default function CheckoutModal({ product, onClose }: CheckoutModalProps) 
         </button>
 
         {!isSuccess ? (
-          /* PASO 1: FORMULARIO DE PAGO */
           <>
             <h2 className="text-xl font-black text-white mb-1">Finalizar Compra</h2>
-            <p className="text-xs text-gray-400 mb-4">Selecciona tu método de pago</p>
+            <p className="text-xs text-gray-400 mb-4">Resumen de tu pedido en USD</p>
 
-            {/* Resumen del producto en USD */}
-            <div className="bg-red-950/30 border border-red-500/20 rounded-xl p-3 mb-6 flex justify-between items-center">
-              <div>
-                <div className="text-sm font-bold text-white">{product.name}</div>
-                <div className="text-[10px] text-gray-400">Entrega automática 24/7</div>
-              </div>
-              <div className="text-lg font-black text-red-500">US${product.price.toFixed(2)}</div>
+            <div className="bg-red-950/30 border border-red-500/20 rounded-xl p-3 mb-4 space-y-2 max-h-48 overflow-y-auto">
+              {cart.map((item) => (
+                <div key={item.id} className="flex justify-between items-center text-xs border-b border-red-500/10 pb-2">
+                  <span className="text-gray-200 font-medium">
+                    <strong className="text-red-400">{item.quantity}x</strong> {item.name}
+                  </span>
+                  <span className="text-white font-bold">US${(item.price * item.quantity).toFixed(2)}</span>
+                </div>
+              ))}
             </div>
 
-            {/* Botones de PayPal configurados en USD */}
+            <div className="flex justify-between items-center mb-6 bg-zinc-900 border border-red-500/30 px-4 py-3 rounded-xl">
+              <span className="text-xs font-bold text-gray-300 uppercase">Total a Pagar:</span>
+              <span className="text-lg font-black text-red-500">US${totalPrice}</span>
+            </div>
+
             <div className="mt-2 z-0">
               <PayPalScriptProvider 
                 options={{ 
@@ -77,9 +80,9 @@ export default function CheckoutModal({ product, onClose }: CheckoutModalProps) 
                         {
                           amount: {
                             currency_code: "USD",
-                            value: product.price.toFixed(2),
+                            value: totalPrice,
                           },
-                          description: product.name,
+                          description: itemDescription,
                         },
                       ],
                     });
@@ -87,9 +90,10 @@ export default function CheckoutModal({ product, onClose }: CheckoutModalProps) 
                   onApprove={async (data, actions) => {
                     if (actions.order) {
                       await actions.order.capture();
-                      const paypalId = data.orderID || "PAYPAL-" + Math.floor(Math.random() * 900000);
-                      setOrderId(paypalId);
+                      const customOrderId = "BSX-" + Math.floor(100000 + Math.random() * 900000);
+                      setOrderId(customOrderId);
                       setIsSuccess(true);
+                      onClearCart();
                     }
                   }}
                 />
@@ -97,7 +101,6 @@ export default function CheckoutModal({ product, onClose }: CheckoutModalProps) 
             </div>
           </>
         ) : (
-          /* PASO 2: MENÚ DE ÉXITO Y DISCORD */
           <div className="text-center py-2">
             <div className="w-16 h-16 bg-red-600/20 border border-red-500 rounded-full flex items-center justify-center mx-auto mb-4 text-red-500 text-3xl shadow-[0_0_15px_rgba(239,68,68,0.5)]">
               ✓
@@ -105,17 +108,18 @@ export default function CheckoutModal({ product, onClose }: CheckoutModalProps) 
 
             <h2 className="text-xl font-black text-white mb-1">¡Pago Exitoso!</h2>
             <p className="text-gray-400 text-xs mb-4">
-              Gracias por tu compra en <span className="text-red-500 font-bold">BSX!</span>
+              Tu pago en <span className="text-red-500 font-bold">BSX Shop</span> se ha procesado con éxito.
             </p>
 
             <div className="bg-red-950/40 border border-red-500/20 rounded-xl p-3 mb-5 text-left">
-              <div className="text-[10px] text-gray-400 uppercase tracking-wider">ID de Orden / Referencia:</div>
-              <div className="text-xs font-mono text-red-300 break-all">{orderId}</div>
+              <div className="text-[10px] text-gray-400 uppercase tracking-wider">Número de Referencia / Orden:</div>
+              <div className="text-sm font-mono text-red-300 font-black">{orderId}</div>
+              <div className="text-[10px] text-gray-400 mt-2">Detalle comprado: <span className="text-gray-200">{itemDescription}</span></div>
             </div>
 
             <div className="border-t border-red-500/20 pt-4 mb-5">
               <p className="text-xs text-gray-300 mb-4 leading-relaxed">
-                📸 <strong className="text-white">Siguiente paso obligatorio:</strong> Toma una captura de pantalla a este comprobante y abre un ticket en nuestro servidor de Discord para reclamar tu producto de forma automática.
+                📸 <strong className="text-white">Paso final:</strong> Toma captura de pantalla a este comprobante y al número de referencia para abrir tu ticket en Discord.
               </p>
               <a
                 href="https://discord.gg/2F87YVpZD" 
