@@ -17,6 +17,22 @@ export default function CheckoutModal({ cart, onClose, onClearCart }: CheckoutMo
   const totalPrice = cart.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2);
   const itemDescription = "BSX Shop: " + cart.map(item => `${item.quantity}x ${item.name}`).join(", ");
 
+  const sendDiscordNotification = async (generatedOrderId: string) => {
+    try {
+      await fetch("/api/notify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          orderId: generatedOrderId,
+          cart,
+          totalPrice,
+        }),
+      });
+    } catch (error) {
+      console.error("No se pudo notificar a Discord:", error);
+    }
+  };
+
   return (
     <div 
       style={{
@@ -72,7 +88,7 @@ export default function CheckoutModal({ cart, onClose, onClearCart }: CheckoutMo
         {!isSuccess ? (
           <>
             <h2 style={{ fontSize: '18px', fontWeight: '900', marginBottom: '4px' }}>Finalizar Compra</h2>
-            <p style={{ fontSize: '11px', color: '#a1a1aa', marginBottom: '16px' }}>Resumen de tu pedido en USD</p>
+            <p style={{ fontSize: '11px', color: '#a1a1aa', marginBottom: '16px' }}>Resumen detallado de tu pedido</p>
 
             <div style={{ backgroundColor: '#18181b', border: '1px solid #27272a', borderRadius: '12px', padding: '12px', marginBottom: '16px', maxHeight: '150px', overflowY: 'auto' }}>
               {cart.map((item) => (
@@ -118,6 +134,9 @@ export default function CheckoutModal({ cart, onClose, onClearCart }: CheckoutMo
                       setOrderId(customOrderId);
                       setIsSuccess(true);
                       onClearCart();
+                      
+                      // Disparar la notificación detallada a Discord
+                      sendDiscordNotification(customOrderId);
                     }
                   }}
                 />
@@ -132,7 +151,7 @@ export default function CheckoutModal({ cart, onClose, onClearCart }: CheckoutMo
 
             <h2 style={{ fontSize: '18px', fontWeight: '900', marginBottom: '4px' }}>¡Pago Exitoso!</h2>
             <p style={{ fontSize: '11px', color: '#a1a1aa', marginBottom: '16px' }}>
-              Tu pago en <strong style={{ color: '#ef4444' }}>BSX Shop</strong> se procesó con éxito.
+              Tu compra en <strong style={{ color: '#ef4444' }}>BSX Shop</strong> se procesó con éxito.
             </p>
 
             <div style={{ backgroundColor: '#18181b', border: '1px solid #27272a', borderRadius: '12px', padding: '12px', marginBottom: '16px', textAlign: 'left' }}>
