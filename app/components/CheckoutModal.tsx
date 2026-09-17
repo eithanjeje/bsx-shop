@@ -25,9 +25,8 @@ export default function CheckoutModal({ cart, onClose, onClearCart }: CheckoutMo
         left: 0,
         width: '100vw',
         height: '100vh',
-        backgroundColor: 'rgba(0, 0, 0, 0.85)',
-        backdropFilter: 'blur(8px)',
-        zIndex: 999999,
+        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+        zIndex: 99999,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -35,36 +34,61 @@ export default function CheckoutModal({ cart, onClose, onClearCart }: CheckoutMo
         overflowY: 'auto'
       }}
     >
-      <div className="gamer-card border border-red-500/60 rounded-2xl p-6 bg-black max-w-md w-full relative shadow-[0_0_50px_rgba(239,68,68,0.6)] my-auto">
+      <div 
+        style={{
+          backgroundColor: '#09090b',
+          border: '1px solid rgba(239, 68, 68, 0.5)',
+          borderRadius: '16px',
+          padding: '24px',
+          width: '100%',
+          maxWidth: '400px',
+          position: 'relative',
+          color: 'white',
+          boxShadow: '0 0 30px rgba(239, 68, 68, 0.3)'
+        }}
+      >
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-white text-base font-bold cursor-pointer z-30 bg-red-950/60 w-8 h-8 rounded-full flex items-center justify-center border border-red-500/40 transition-all hover:bg-red-600"
+          style={{
+            position: 'absolute',
+            top: '16px',
+            right: '16px',
+            background: '#18181b',
+            border: '1px solid #27272a',
+            color: '#a1a1aa',
+            width: '32px',
+            height: '32px',
+            borderRadius: '50%',
+            cursor: 'pointer',
+            fontWeight: 'bold',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
         >
           ✕
         </button>
 
         {!isSuccess ? (
           <>
-            <h2 className="text-xl font-black text-white mb-1">Finalizar Compra</h2>
-            <p className="text-xs text-gray-400 mb-4">Resumen de tu pedido en USD</p>
+            <h2 style={{ fontSize: '18px', fontWeight: '900', marginBottom: '4px' }}>Finalizar Compra</h2>
+            <p style={{ fontSize: '11px', color: '#a1a1aa', marginBottom: '16px' }}>Resumen de tu pedido en USD</p>
 
-            <div className="bg-red-950/30 border border-red-500/20 rounded-xl p-3 mb-4 space-y-2 max-h-48 overflow-y-auto">
+            <div style={{ backgroundColor: '#18181b', border: '1px solid #27272a', borderRadius: '12px', padding: '12px', marginBottom: '16px', maxHeight: '150px', overflowY: 'auto' }}>
               {cart.map((item) => (
-                <div key={item.id} className="flex justify-between items-center text-xs border-b border-red-500/10 pb-2">
-                  <span className="text-gray-200 font-medium">
-                    <strong className="text-red-400">{item.quantity}x</strong> {item.name}
-                  </span>
-                  <span className="text-white font-bold">US${(item.price * item.quantity).toFixed(2)}</span>
+                <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '8px', borderBottom: '1px solid #27272a', paddingBottom: '6px' }}>
+                  <span><strong style={{ color: '#ef4444' }}>{item.quantity}x</strong> {item.name}</span>
+                  <span style={{ fontWeight: 'bold' }}>US${(item.price * item.quantity).toFixed(2)}</span>
                 </div>
               ))}
             </div>
 
-            <div className="flex justify-between items-center mb-6 bg-zinc-900 border border-red-500/30 px-4 py-3 rounded-xl">
-              <span className="text-xs font-bold text-gray-300 uppercase">Total a Pagar:</span>
-              <span className="text-lg font-black text-red-500">US${totalPrice}</span>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', backgroundColor: '#18181b', padding: '12px 16px', borderRadius: '12px', border: '1px solid #27272a' }}>
+              <span style={{ fontSize: '11px', fontWeight: 'bold', color: '#a1a1aa' }}>TOTAL A PAGAR:</span>
+              <span style={{ fontSize: '16px', fontWeight: '900', color: '#ef4444' }}>US${totalPrice}</span>
             </div>
 
-            <div className="mt-2 z-0">
+            <div>
               <PayPalScriptProvider 
                 options={{ 
                   clientId: "BAAVWzBgpz3ZR-aEe0nPqCzSNjidhMXYP2k2VLApS9QBOxcTUStOccfuo8HzXzpwOEqY65MrySFFwM68yg", 
@@ -101,31 +125,31 @@ export default function CheckoutModal({ cart, onClose, onClearCart }: CheckoutMo
             </div>
           </>
         ) : (
-          <div className="text-center py-2">
-            <div className="w-16 h-16 bg-red-600/20 border border-red-500 rounded-full flex items-center justify-center mx-auto mb-4 text-red-500 text-3xl shadow-[0_0_15px_rgba(239,68,68,0.5)]">
+          <div style={{ textAlign: 'center', padding: '10px 0' }}>
+            <div style={{ width: '50px', height: '50px', backgroundColor: 'rgba(239, 68, 68, 0.2)', border: '1px solid #ef4444', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', color: '#ef4444', fontSize: '24px' }}>
               ✓
             </div>
 
-            <h2 className="text-xl font-black text-white mb-1">¡Pago Exitoso!</h2>
-            <p className="text-gray-400 text-xs mb-4">
-              Tu pago en <span className="text-red-500 font-bold">BSX Shop</span> se ha procesado con éxito.
+            <h2 style={{ fontSize: '18px', fontWeight: '900', marginBottom: '4px' }}>¡Pago Exitoso!</h2>
+            <p style={{ fontSize: '11px', color: '#a1a1aa', marginBottom: '16px' }}>
+              Tu pago en <strong style={{ color: '#ef4444' }}>BSX Shop</strong> se procesó con éxito.
             </p>
 
-            <div className="bg-red-950/40 border border-red-500/20 rounded-xl p-3 mb-5 text-left">
-              <div className="text-[10px] text-gray-400 uppercase tracking-wider">Número de Referencia / Orden:</div>
-              <div className="text-sm font-mono text-red-300 font-black">{orderId}</div>
-              <div className="text-[10px] text-gray-400 mt-2">Detalle comprado: <span className="text-gray-200">{itemDescription}</span></div>
+            <div style={{ backgroundColor: '#18181b', border: '1px solid #27272a', borderRadius: '12px', padding: '12px', marginBottom: '16px', textAlign: 'left' }}>
+              <div style={{ fontSize: '10px', color: '#a1a1aa', textTransform: 'uppercase' }}>Número de Referencia:</div>
+              <div style={{ fontSize: '14px', fontFamily: 'monospace', color: '#fca5a5', fontWeight: '900', marginBottom: '6px' }}>{orderId}</div>
+              <div style={{ fontSize: '10px', color: '#a1a1aa' }}>Detalle: <span style={{ color: 'white' }}>{itemDescription}</span></div>
             </div>
 
-            <div className="border-t border-red-500/20 pt-4 mb-5">
-              <p className="text-xs text-gray-300 mb-4 leading-relaxed">
-                📸 <strong className="text-white">Paso final:</strong> Toma captura de pantalla a este comprobante y al número de referencia para abrir tu ticket en Discord.
+            <div style={{ borderTop: '1px solid #27272a', paddingTop: '16px', marginBottom: '16px' }}>
+              <p style={{ fontSize: '11px', color: '#d4d4d8', marginBottom: '12px', lineHeight: '1.5' }}>
+                📸 <strong>Paso final:</strong> Toma captura de pantalla a este comprobante y al número de referencia para abrir tu ticket en Discord.
               </p>
               <a
                 href="https://discord.gg/2F87YVpZD" 
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block w-full bg-[#5865F2] hover:bg-[#4752C4] text-white text-xs font-bold py-3 rounded-xl transition-all shadow-[0_0_15px_rgba(88,101,242,0.4)]"
+                style={{ display: 'block', width: '100%', backgroundColor: '#5865F2', color: 'white', fontSize: '12px', fontWeight: 'bold', padding: '12px', borderRadius: '12px', textDecoration: 'none', boxShadow: '0 0 15px rgba(88,101,242,0.4)' }}
               >
                 Ir a Discord a reclamar 🚀
               </a>
@@ -133,7 +157,7 @@ export default function CheckoutModal({ cart, onClose, onClearCart }: CheckoutMo
 
             <button
               onClick={onClose}
-              className="text-xs text-gray-400 hover:text-white underline cursor-pointer"
+              style={{ fontSize: '11px', color: '#a1a1aa', background: 'none', border: 'none', textDecoration: 'underline', cursor: 'pointer' }}
             >
               Cerrar menú
             </button>
