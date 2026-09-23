@@ -32,75 +32,55 @@ export default function CheckoutModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black p-4">
-      <div className="bg-neutral-950 border-2 border-red-600 rounded-2xl w-full max-w-lg p-6 shadow-2xl shadow-red-950 text-white relative">
+    <div style={{ position: 'fixed', inset: 0, zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.85)', padding: '16px', fontFamily: 'sans-serif' }}>
+      <div style={{ backgroundColor: '#0f0202', border: '2px solid #dc2626', borderRadius: '20px', width: '100%', maxWidth: '500px', padding: '24px', boxShadow: '0 25px 50px -12px rgba(127, 29, 29, 0.6)', color: '#ffffff', position: 'relative' }}>
         
-        {/* Botón de cierre */}
-        <button 
-          onClick={onClose}
-          className="absolute top-4 right-4 text-neutral-400 hover:text-white text-xl font-bold cursor-pointer"
-        >
-          ✕
-        </button>
+        <button onClick={onClose} style={{ position: 'absolute', top: '16px', right: '16px', background: 'none', border: 'none', color: '#a3a3a3', fontSize: '18px', fontWeight: 'bold', cursor: 'pointer' }}>✕</button>
 
-        <h2 className="text-xl font-bold mb-4 text-red-500 flex items-center gap-2">
+        <h2 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '16px', color: '#ef4444', display: 'flex', alignItems: 'center', gap: '8px', margin: '0 0 16px 0' }}>
           🛒 Finalizar Compra — BSX Shop
         </h2>
 
-        {/* Resumen del carrito */}
-        <div className="bg-neutral-900 border border-red-900 rounded-xl p-3 mb-4 max-h-40 overflow-y-auto">
-          <p className="text-xs text-red-400 font-semibold mb-2 uppercase tracking-wider">Productos en tu orden:</p>
+        {/* Resumen */}
+        <div style={{ backgroundColor: '#180303', border: '1px solid #7f1d1d', borderRadius: '12px', padding: '12px', marginBottom: '16px', maxHeight: '160px', overflowY: 'auto' }}>
+          <p style={{ fontSize: '11px', color: '#f87171', fontWeight: '600', marginBottom: '8px', textTransform: 'uppercase', margin: '0 0 8px 0' }}>Productos en tu orden:</p>
           {cart && cart.length > 0 ? (
             cart.map((item, index) => (
-              <div key={item.id || index} className="flex justify-between text-sm py-1 border-b border-red-900/50">
+              <div key={item.id || index} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', padding: '4px 0', borderBottom: '1px solid rgba(127, 29, 29, 0.3)' }}>
                 <span>{item.name} (x{item.quantity || 1})</span>
-                <span className="text-red-300 font-mono">${((item.price || 0) * (item.quantity || 1)).toFixed(2)} USD</span>
+                <span style={{ color: '#fca5a5', fontFamily: 'monospace' }}>${((item.price || 0) * (item.quantity || 1)).toFixed(2)} USD</span>
               </div>
             ))
           ) : (
-            <p className="text-xs text-neutral-400 italic">No hay productos en el carrito.</p>
+            <p style={{ fontSize: '12px', color: '#a3a3a3', fontStyle: 'italic', margin: 0 }}>No hay productos en el carrito.</p>
           )}
-          <div className="flex justify-between font-bold mt-2 pt-2 border-t border-red-800 text-base">
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', marginTop: '10px', paddingTop: '8px', borderTop: '1px solid #7f1d1d', fontSize: '15px' }}>
             <span>Total a Pagar:</span>
-            <span className="text-red-500 font-mono">${(totalAmount || 0).toFixed(2)} USD</span>
+            <span style={{ color: '#ef4444', fontFamily: 'monospace' }}>${(totalAmount || 0).toFixed(2)} USD</span>
           </div>
         </div>
 
-        {/* Datos de Pago (Binance Pay) */}
-        <div className="space-y-3 mb-6">
-          <p className="text-xs text-red-400 font-semibold uppercase tracking-wider">Método de Pago Oficial:</p>
-          
-          <div className="p-4 rounded-xl border border-red-700 bg-neutral-900">
-            <div className="flex items-center gap-3 mb-3">
-              <div>
-                <span className="font-bold block text-base text-red-200">Binance Pay (USDT / Cripto)</span>
-                <span className="text-xs text-neutral-300">Pago instantáneo y sin comisiones bancarias</span>
+        {/* Binance Pay Info */}
+        <div style={{ marginBottom: '20px' }}>
+          <p style={{ fontSize: '11px', color: '#f87171', fontWeight: '600', textTransform: 'uppercase', margin: '0 0 8px 0' }}>Método de Pago Oficial:</p>
+          <div style={{ padding: '14px', borderRadius: '12px', border: '1px solid #dc2626', backgroundColor: '#180303' }}>
+            <span style={{ fontWeight: 'bold', display: 'block', fontSize: '14px', color: '#fca5a5', marginBottom: '6px' }}>Binance Pay (USDT / Cripto)</span>
+            <div style={{ fontSize: '12px', color: '#e5e5e5', backgroundColor: '#0a0101', padding: '10px', borderRadius: '8px', border: '1px solid #7f1d1d', lineHeight: '1.6' }}>
+              <div>Binance UID: <strong style={{ color: '#ef4444', fontFamily: 'monospace' }}>1270416760</strong></div>
+              <div>Correo Binance: <strong style={{ color: '#ef4444', fontFamily: 'monospace' }}>eithanvargas426@gmail.com</strong></div>
+              <div style={{ fontSize: '11px', color: '#a3a3a3', marginTop: '6px', paddingTop: '6px', borderTop: '1px solid rgba(127, 29, 29, 0.4)' }}>
+                * Realiza el monto exacto en Binance Pay y haz clic en confirmar para registrar tu pedido y enviar el comprobante por Discord.
               </div>
             </div>
-            
-            <div className="text-xs text-neutral-200 bg-neutral-950 p-3 rounded-lg border border-red-900 space-y-1.5">
-              <p>Binance UID: <span className="text-red-400 font-mono font-bold text-sm">1270416760</span></p>
-              <p>Correo Binance: <span className="text-red-400 font-mono">eithanvargas426@gmail.com</span></p>
-              <p className="text-[11px] text-neutral-400 pt-1 border-t border-red-900/60 mt-2">
-                * Realiza el monto exacto en Binance Pay y haz clic en confirmar para registrar tu pedido y enviar el comprobante por Discord.
-              </p>
-            </div>
           </div>
         </div>
 
-        {/* Botones de acción */}
-        <div className="flex gap-3">
-          <button 
-            onClick={onClose}
-            className="flex-1 py-2.5 px-4 rounded-xl bg-neutral-900 hover:bg-neutral-800 border border-neutral-700 text-neutral-300 font-medium transition-all cursor-pointer"
-          >
+        {/* Botones */}
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <button onClick={onClose} style={{ flex: 1, padding: '12px', borderRadius: '12px', backgroundColor: '#180303', border: '1px solid #525252', color: '#d4d4d4', fontWeight: '500', cursor: 'pointer' }}>
             Cancelar
           </button>
-          <button 
-            onClick={handleCheckout}
-            disabled={loading}
-            className="flex-1 py-2.5 px-4 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold shadow-lg shadow-red-900/50 transition-all flex items-center justify-center gap-2 cursor-pointer"
-          >
+          <button onClick={handleCheckout} disabled={loading} style={{ flex: 1, padding: '12px', borderRadius: '12px', backgroundColor: '#dc2626', border: 'none', color: '#ffffff', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 4px 6px -1px rgba(220, 38, 38, 0.4)' }}>
             {loading ? 'Procesando...' : 'Confirmar Pedido 🚀'}
           </button>
         </div>
