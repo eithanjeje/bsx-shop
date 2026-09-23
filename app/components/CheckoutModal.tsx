@@ -14,10 +14,10 @@ interface CheckoutModalProps {
   onClose: () => void;
   cart: CartItem[];
   totalAmount: number;
-  onClearCart?: () => void; // <--- Agregado aquí para evitar el error de TypeScript
+  onClearCart?: () => void; // Marcado como opcional por seguridad
 }
 
-export default function CheckoutModal({ isOpen, onClose, cart, totalAmount, onClearCart }: CheckoutModalProps) {
+export default function CheckoutModal({ isOpen, onClose, cart = [], totalAmount = 0, onClearCart }: CheckoutModalProps) {
   const [loading, setLoading] = useState(false);
 
   if (!isOpen) return null;
@@ -26,7 +26,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, totalAmount, onCl
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      if (onClearCart) onClearCart(); // Limpia el carrito si la función existe
+      if (onClearCart) onClearCart();
       onClose();
       alert('¡Orden registrada! Por favor realiza tu pago por Binance Pay y envía tu comprobante o Hash por Discord.');
     }, 1000);
@@ -51,15 +51,19 @@ export default function CheckoutModal({ isOpen, onClose, cart, totalAmount, onCl
         {/* Resumen del carrito */}
         <div className="bg-purple-950/30 border border-purple-500/20 rounded-xl p-3 mb-4 max-h-40 overflow-y-auto">
           <p className="text-xs text-purple-400 font-semibold mb-2 uppercase tracking-wider">Productos en tu orden:</p>
-          {cart.map((item) => (
-            <div key={item.id} className="flex justify-between text-sm py-1 border-b border-purple-500/10">
-              <span>{item.name} (x{item.quantity})</span>
-              <span className="text-purple-300 font-mono">${(item.price * item.quantity).toFixed(2)} USD</span>
-            </div>
-          ))}
+          {cart && cart.length > 0 ? (
+            cart.map((item) => (
+              <div key={item.id} className="flex justify-between text-sm py-1 border-b border-purple-500/10">
+                <span>{item.name} (x{item.quantity})</span>
+                <span className="text-purple-300 font-mono">${(item.price * item.quantity).toFixed(2)} USD</span>
+              </div>
+            ))
+          ) : (
+            <p className="text-xs text-gray-400 italic">No hay productos en el carrito.</p>
+          )}
           <div className="flex justify-between font-bold mt-2 pt-2 border-t border-purple-500/30 text-base">
             <span>Total a Pagar:</span>
-            <span className="text-green-400 font-mono">${totalAmount.toFixed(2)} USD</span>
+            <span className="text-green-400 font-mono">${(totalAmount || 0).toFixed(2)} USD</span>
           </div>
         </div>
 
