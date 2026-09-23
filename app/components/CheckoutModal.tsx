@@ -2,22 +2,21 @@
 
 import React, { useState } from 'react';
 
-interface CartItem {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-}
-
 interface CheckoutModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  cart: CartItem[];
-  totalAmount: number;
-  onClearCart?: () => void; // Marcado como opcional por seguridad
+  isOpen?: boolean;
+  onClose?: () => void;
+  cart?: any[];
+  totalAmount?: number;
+  onClearCart?: () => void;
 }
 
-export default function CheckoutModal({ isOpen, onClose, cart = [], totalAmount = 0, onClearCart }: CheckoutModalProps) {
+export default function CheckoutModal({ 
+  isOpen = false, 
+  onClose = () => {}, 
+  cart = [], 
+  totalAmount = 0, 
+  onClearCart 
+}: CheckoutModalProps) {
   const [loading, setLoading] = useState(false);
 
   if (!isOpen) return null;
@@ -27,7 +26,7 @@ export default function CheckoutModal({ isOpen, onClose, cart = [], totalAmount 
     setTimeout(() => {
       setLoading(false);
       if (onClearCart) onClearCart();
-      onClose();
+      if (onClose) onClose();
       alert('¡Orden registrada! Por favor realiza tu pago por Binance Pay y envía tu comprobante o Hash por Discord.');
     }, 1000);
   };
@@ -52,10 +51,10 @@ export default function CheckoutModal({ isOpen, onClose, cart = [], totalAmount 
         <div className="bg-purple-950/30 border border-purple-500/20 rounded-xl p-3 mb-4 max-h-40 overflow-y-auto">
           <p className="text-xs text-purple-400 font-semibold mb-2 uppercase tracking-wider">Productos en tu orden:</p>
           {cart && cart.length > 0 ? (
-            cart.map((item) => (
-              <div key={item.id} className="flex justify-between text-sm py-1 border-b border-purple-500/10">
-                <span>{item.name} (x{item.quantity})</span>
-                <span className="text-purple-300 font-mono">${(item.price * item.quantity).toFixed(2)} USD</span>
+            cart.map((item, index) => (
+              <div key={item.id || index} className="flex justify-between text-sm py-1 border-b border-purple-500/10">
+                <span>{item.name} (x{item.quantity || 1})</span>
+                <span className="text-purple-300 font-mono">${((item.price || 0) * (item.quantity || 1)).toFixed(2)} USD</span>
               </div>
             ))
           ) : (
