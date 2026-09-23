@@ -26,8 +26,8 @@ export default function CheckoutModal({
     setLoading(true);
 
     try {
-      // Webhook de Discord configurado
-      const webhookUrl = 'https://discord.com/api/webhooks/1552136954475323412/Ukr9AbxSGWQMk41-W1OdHAS-jah_YQyUUM76mlrMgrZZinKbxUxUaEbP9HmrOL3K2E-b';
+      // 🔔 NUEVA WEBHOOK DE DISCORD CONFIGURADA
+      const webhookUrl = 'https://discord.com/api/webhooks/1552153415977664542/Dc5jhwC6rSos_Qk8jXZhvwpZXLpSEsTie7I0zkJ02qeHHUNReNQjEJbl9n8zbtiKlyfz';
 
       const productosTexto = cart.map(item => `• ${item.name} (x${item.quantity}) - $${(item.price * item.quantity).toFixed(2)}`).join('\n');
       
