@@ -14,9 +14,10 @@ interface CheckoutModalProps {
   onClose: () => void;
   cart: CartItem[];
   totalAmount: number;
+  onClearCart?: () => void; // <--- Agregado aquí para evitar el error de TypeScript
 }
 
-export default function CheckoutModal({ isOpen, onClose, cart, totalAmount }: CheckoutModalProps) {
+export default function CheckoutModal({ isOpen, onClose, cart, totalAmount, onClearCart }: CheckoutModalProps) {
   const [loading, setLoading] = useState(false);
 
   if (!isOpen) return null;
@@ -25,6 +26,8 @@ export default function CheckoutModal({ isOpen, onClose, cart, totalAmount }: Ch
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
+      if (onClearCart) onClearCart(); // Limpia el carrito si la función existe
+      onClose();
       alert('¡Orden registrada! Por favor realiza tu pago por Binance Pay y envía tu comprobante o Hash por Discord.');
     }, 1000);
   };
